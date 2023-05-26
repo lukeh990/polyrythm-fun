@@ -7,8 +7,9 @@ import { appWindow } from '@tauri-apps/api/window';
 
 window.addEventListener("keyup", async (event) => {
   if (event.altKey && event.key === "f") {
-    console.log(appWindow.isFullscreen())
-    appWindow.setFullscreen(!(await appWindow.isFullscreen()));
+    if (window["__TAURI_METADATA__"]) {
+      appWindow.setFullscreen(!(await appWindow.isFullscreen()));
+    }
   }
 })
 
@@ -158,6 +159,10 @@ const draw = () => {
 };
 
 button.innerText = settings.soundEnabled ? "Sound Enabled" : "Sound Disabled";
+
+if (!window["__TAURI_METADATA__"]) {
+  (document.querySelector("#notification") as HTMLParagraphElement).innerText = "";
+}
 
 draw();
 
