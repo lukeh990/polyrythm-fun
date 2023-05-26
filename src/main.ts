@@ -3,6 +3,16 @@ const canvas = document.querySelector("#app") as HTMLCanvasElement,
 
 const button = document.querySelector("#sound") as HTMLButtonElement;
 
+import { appWindow } from '@tauri-apps/api/window';
+
+window.addEventListener("keyup", async (event) => {
+  if (event.altKey && event.key === "f") {
+    if (window["__TAURI_METADATA__"]) {
+      appWindow.setFullscreen(!(await appWindow.isFullscreen()));
+    }
+  }
+})
+
 interface Arc {
   color: string;
   audio: HTMLAudioElement;
@@ -13,7 +23,7 @@ interface Arc {
 const settings = {
   startTime: new Date().getTime(),
   soundEnabled: false,
-  volume: 0.02,
+  volume: 0.05,
   oneFullLoop: 2 * Math.PI,
   baseLoops: 50,
   loopTime: 900,
@@ -150,4 +160,10 @@ const draw = () => {
 
 button.innerText = settings.soundEnabled ? "Sound Enabled" : "Sound Disabled";
 
+if (!window["__TAURI_METADATA__"]) {
+  (document.querySelector("#notification") as HTMLParagraphElement).innerText = "";
+}
+
 draw();
+
+// (async () => invoke("open_docs"))();
